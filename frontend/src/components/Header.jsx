@@ -66,9 +66,23 @@ return (
                         ) : 
                         (
                             <LinkContainer to='/login'>
-                                <Nav.Link><FaUser/>Sign In</Nav.Link>
+                                <Nav.Link><FaUser/>Ingresar</Nav.Link>
                             </LinkContainer>                       
                         ) }
+
+                        {userInfo && userInfo.isAdmin && (
+                            <NavDropdown title='Admin' id='adminmenu'>
+                            <NavDropdown.Item as={Link} to='/admin/productlist'>
+                                Productos
+                            </NavDropdown.Item>
+                            <NavDropdown.Item as={Link} to='/admin/orderlist'>
+                                Ordenes
+                            </NavDropdown.Item>
+                            <NavDropdown.Item as={Link} to='/admin/userlist'>
+                                Usuarios
+                            </NavDropdown.Item>
+                            </NavDropdown>
+                        )}
 
                     </Nav>                    
                 </Navbar.Collapse>

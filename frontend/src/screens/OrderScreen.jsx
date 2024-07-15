@@ -22,6 +22,8 @@ const OrderScreen = () => {
 
     const [payOrder, { isLoading: loadingPay }] = usePayOrderMutation();
 
+    const [deliverOrder, { isLoading: loadingDeliver }] = useDeliverOrderMutation();
+
     const [{ isPending }, paypalDispatch] = usePayPalScriptReducer();
 
     const { data: paypal, isLoading: loadingPayPal, error: errorPayPal } = useGetPaypalClientIdQuery();
@@ -87,23 +89,33 @@ const OrderScreen = () => {
         });
     }
 
+    const deliverHandler = async () => {
+        try {
+            await deliverOrder(orderId);
+            refetch();
+            toast.success('Pedido enviado')
+        } catch (err) {
+            toast.error(err?.data?.message || err.message);
+        }
+    };
+
     return isLoading ? (
         <Loader />
             ) : error ? (
                 <Message variant='danger'>{error.data.message}</Message>
             ) : (
                 <>
-                    <h1>Order {order._id}</h1>
+                    <h1>Pedido N° {order._id}</h1>
                     <Row>
                         <Col md={8}>
                             <ListGroup variant='flush'>
                                 <ListGroup.Item>
-                                    <h2>Shipping</h2>
+                                    <h2>Envio</h2>
                                     <p>
-                                        <strong>Name: </strong> {order.user.name}
+                                        <strong>Nombres: </strong> {order.user.name}
                                     </p>
                                     <p>
-                                        <strong>Email: </strong>{order.user.email}
+                                        <strong>Correo: </strong>{order.user.email}
                                         {/* <a href={`mailto:${order.user.email}`}>{order.user.email}</a> */}
                                     </p>
                                     <p>
@@ -119,53 +131,53 @@ const OrderScreen = () => {
                                     ) : (
                                         <Message variant='danger'>No entregado</Message>
                                     )}
+                                </ListGroup.Item>                            
+
+                                <ListGroup.Item>
+                                    <h2>Metodo de pago</h2>
+                                    <p>
+                                        <strong>Metodo: </strong>
+                                        {order.paymentMethod}
+                                    </p>
+                                    {order.isPaid ? (
+                                        <Message variant='success'>Pago realizado el {order.paidAt}</Message>
+                                    ) : (
+                                        <Message variant='danger'>Pago no realizado</Message>
+                                    )}
+                                </ListGroup.Item>
+
+                                <ListGroup.Item>
+                                <h2>Pedidos</h2>
+                                {order.orderItems.length === 0 ? (
+                                    <Message>Sin pedidos</Message>
+                                ) : (
+                                    <ListGroup variant='flush'>
+                                        {order.orderItems.map((item, index) => (
+                                            <ListGroup.Item key={index}>
+                                            <Row>
+                                                <Col md={1}>
+                                                <Image
+                                                    src={item.image}
+                                                    alt={item.name}
+                                                    fluid
+                                                    rounded
+                                                />
+                                                </Col>
+                                                <Col>
+                                                <Link to={`/product/${item.product}`}>
+                                                    {item.name}
+                                                </Link>
+                                                </Col>
+                                                <Col md={4}>
+                                                {item.qty} x ${item.price} = ${item.qty * item.price}
+                                                </Col>
+                                            </Row>
+                                            </ListGroup.Item>
+                                        ))}
+                                    </ListGroup>
+                                )}
                                 </ListGroup.Item>
                             </ListGroup>
-
-                            <ListGroup.Item>
-                                <h2>Metodo de pago</h2>
-                                <p>
-                                    <strong>Metodo: </strong>
-                                    {order.paymentMethod}
-                                </p>
-                                {order.isPaid ? (
-                                    <Message variant='success'>Pago realizado el {order.paidAt}</Message>
-                                ) : (
-                                    <Message variant='danger'>Pago no realizado</Message>
-                                )}
-                            </ListGroup.Item>
-
-                            <ListGroup.Item>
-                            <h2>Pedidos</h2>
-                            {order.orderItems.length === 0 ? (
-                                <Message>Sin pedidos</Message>
-                            ) : (
-                                <ListGroup variant='flush'>
-                                    {order.orderItems.map((item, index) => (
-                                        <ListGroup.Item key={index}>
-                                        <Row>
-                                            <Col md={1}>
-                                            <Image
-                                                src={item.image}
-                                                alt={item.name}
-                                                fluid
-                                                rounded
-                                            />
-                                            </Col>
-                                            <Col>
-                                            <Link to={`/product/${item.product}`}>
-                                                {item.name}
-                                            </Link>
-                                            </Col>
-                                            <Col md={4}>
-                                            {item.qty} x ${item.price} = ${item.qty * item.price}
-                                            </Col>
-                                        </Row>
-                                        </ListGroup.Item>
-                                    ))}
-                                </ListGroup>
-                            )}
-                            </ListGroup.Item>
                         </Col>
 
                         <Col md={4}>
@@ -226,8 +238,22 @@ const OrderScreen = () => {
                                     )}
                                     </ListGroup.Item>
                                 )}
+                                {loadingDeliver && <Loader />}
 
-
+                                {userInfo &&
+                                userInfo.isAdmin &&
+                                order.isPaid &&
+                                !order.isDelivered && (
+                                    <ListGroup.Item>
+                                    <Button
+                                        type='button'
+                                        className='btn btn-block'
+                                        onClick={deliverHandler}
+                                    >
+                                        Marcar como enviado
+                                    </Button>
+                                    </ListGroup.Item>
+                                )}
                                 </ListGroup>
                             </Card>
                         </Col>
