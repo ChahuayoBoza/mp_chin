@@ -8,14 +8,16 @@ import Loader from '../../components/Loader';
 import {
     useGetProductsQuery,
     // useDeleteProductMutation,
-    // useCreateProductMutation,
+    useCreateProductMutation,
 } from '../../slices/productsApiSlice';
 import { toast } from 'react-toastify';
 
 const ProductListScreen = () => {
     // const { pageNumber } = useParams();
 
-    const { data:products, isLoading, error} = useGetProductsQuery();
+    const { data:products, isLoading, error, refetch} = useGetProductsQuery();
+
+    const [createProduct, { isLoading: loadingCreate }] = useCreateProductMutation();
 
 
     // const [deleteProduct, { isLoading: loadingDelete }] =
@@ -32,18 +34,15 @@ const ProductListScreen = () => {
         // }
     };
 
-    // const [createProduct, { isLoading: loadingCreate }] =
-    //     useCreateProductMutation();
-
     const createProductHandler = async () => {
-        // if (window.confirm('Are you sure you want to create a new product?')) {
-        // try {
-        //     await createProduct();
-        //     refetch();
-        // } catch (err) {
-        //     toast.error(err?.data?.message || err.error);
-        // }
-        // }
+        if (window.confirm('Estas seguro de crear el producto')) {
+        try {
+            await createProduct();
+            refetch();
+        } catch (err) {
+            toast.error(err?.data?.message || err.error);
+        }
+        }
     };
 
     return (
@@ -59,8 +58,8 @@ const ProductListScreen = () => {
             </Col>
         </Row>
 
-        {/* {loadingCreate && <Loader />}
-        {loadingDelete && <Loader />} */}
+        {loadingCreate && <Loader />}
+        {/* {loadingDelete && <Loader />}  */}
         {isLoading ? (
             <Loader />
         ) : error ? (
