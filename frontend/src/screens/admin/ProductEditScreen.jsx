@@ -9,7 +9,7 @@ import { toast } from 'react-toastify';
 import {
     useGetProductDetailsQuery,
     useUpdateProductMutation,
-    // useUploadProductImageMutation,
+    useUploadProductImageMutation,
 } from '../../slices/productsApiSlice';
 
 const ProductEditScreen = () => {
@@ -29,8 +29,7 @@ const ProductEditScreen = () => {
 
     const [updateProduct, { isLoading: loadingUpdate }] = useUpdateProductMutation();
 
-    // const [uploadProductImage, { isLoading: loadingUpload }] =
-    //     useUploadProductImageMutation();
+    const [uploadProductImage, { isLoading: loadingUpload }] = useUploadProductImageMutation();
 
     const navigate = useNavigate();
 
@@ -67,17 +66,17 @@ const ProductEditScreen = () => {
         }
     }, [product]);
 
-    // const uploadFileHandler = async (e) => {
-    //     const formData = new FormData();
-    //     formData.append('image', e.target.files[0]);
-    //     try {
-    //     const res = await uploadProductImage(formData).unwrap();
-    //     toast.success(res.message);
-    //     setImage(res.image);
-    //     } catch (err) {
-    //     toast.error(err?.data?.message || err.error);
-    //     }
-    // };
+    const uploadFileHandler = async (e) => {
+        const formData = new FormData();
+        formData.append('image', e.target.files[0]);
+        try {
+            const res = await uploadProductImage(formData).unwrap();
+            toast.success(res.message);
+            setImage(res.image);
+        } catch (err) {
+            toast.error(err?.data?.message || err.error);
+        }
+    };
 
     return (
         <>
@@ -114,23 +113,23 @@ const ProductEditScreen = () => {
                 </Form.Group>
 
                 <Form.Group controlId='image'>
-                <Form.Label>Imagen</Form.Label>
-                <Form.Control
-                    type='text'
-                    placeholder='Ingresa la url de la imagen'
-                    value={image}
-                    onChange={(e) => setImage(e.target.value)}
-                ></Form.Control>
-                <Form.Control
-                    label='Seleccionar imagen'
-                    // onChange={uploadFileHandler}
-                    type='file'
-                ></Form.Control>
-                {/* {loadingUpload && <Loader />} */}
+                    <Form.Label>Imagen</Form.Label>
+                    <Form.Control
+                        type='text'
+                        placeholder='Ingresa la url de la imagen'
+                        value={image}
+                        onChange={(e) => setImage(e.target.value)}
+                    ></Form.Control>
+                    <Form.Control
+                        label='Seleccionar imagen'
+                        onChange={uploadFileHandler}
+                        type='file'
+                    ></Form.Control>
+                    {/* {loadingUpload && <Loader />} */}
                 </Form.Group>
 
                 <Form.Group controlId='brand'>
-                <Form.Label>MArca</Form.Label>
+                <Form.Label>Marca</Form.Label>
                 <Form.Control
                     type='text'
                     placeholder='Ingrese la marca'
