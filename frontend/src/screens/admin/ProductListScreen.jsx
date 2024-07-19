@@ -7,7 +7,7 @@ import Loader from '../../components/Loader';
 // import Paginate from '../../components/Paginate';
 import {
     useGetProductsQuery,
-    // useDeleteProductMutation,
+    useDeleteProductMutation,
     useCreateProductMutation,
 } from '../../slices/productsApiSlice';
 import { toast } from 'react-toastify';
@@ -19,19 +19,18 @@ const ProductListScreen = () => {
 
     const [createProduct, { isLoading: loadingCreate }] = useCreateProductMutation();
 
-
-    // const [deleteProduct, { isLoading: loadingDelete }] =
-    //     useDeleteProductMutation();
+    const [deleteProduct, { isLoading: loadingDelete }] = useDeleteProductMutation();
 
     const deleteHandler = async (id) => {
-        // if (window.confirm('Are you sure')) {
-        // try {
-        //     await deleteProduct(id);
-        //     refetch();
-        // } catch (err) {
-        //     toast.error(err?.data?.message || err.error);
-        // }
-        // }
+        if (window.confirm('¿Estas seguro?')) {
+        try {
+            await deleteProduct(id);
+            toast.success('Producto eliminado');
+            refetch();
+        } catch (err) {
+            toast.error(err?.data?.message || err.error);
+        }
+        }
     };
 
     const createProductHandler = async () => {
@@ -59,7 +58,7 @@ const ProductListScreen = () => {
         </Row>
 
         {loadingCreate && <Loader />}
-        {/* {loadingDelete && <Loader />}  */}
+        {loadingDelete && <Loader />} 
         {isLoading ? (
             <Loader />
         ) : error ? (
