@@ -7,6 +7,7 @@ import { logout } from '../slices/authSlice';
 import { LinkContainer } from 'react-router-bootstrap';
 import { useSelector, useDispatch } from 'react-redux';
 import logo from '../assets/logo.png'
+import SearchBox from './SearchBox';
 const Header = () => {
 
     const { cartItems } = useSelector((state) => state.cart);
@@ -45,8 +46,9 @@ return (
                 <Navbar.Toggle aria-controls='basic-navbar-nav'/>
                 <Navbar.Collapse id='basic-navbar-nav'>
                     <Nav className='ms-auto'>
+                        <SearchBox />
                         <LinkContainer to='/cart'>
-                            <Nav.Link><FaShoppingCart />Cart
+                            <Nav.Link><FaShoppingCart />Carrito
                             {cartItems.length > 0 && (
                                 <Badge pill bg='success' style={{marginLeft: '5px'}}>
                                     { cartItems.reduce((a, c) => a + c.qty, 0) }
@@ -76,7 +78,7 @@ return (
                                 Productos
                             </NavDropdown.Item>
                             <NavDropdown.Item as={Link} to='/admin/orderlist'>
-                                Ordenes
+                                Pedidos
                             </NavDropdown.Item>
                             <NavDropdown.Item as={Link} to='/admin/userlist'>
                                 Usuarios
