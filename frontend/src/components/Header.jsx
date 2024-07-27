@@ -4,7 +4,6 @@ import { FaShoppingCart, FaUser } from 'react-icons/fa';
 import { useNavigate, Link } from 'react-router-dom';
 import { useLogoutMutation } from '../slices/usersApiSlice';
 import { logout } from '../slices/authSlice';
-import { LinkContainer } from 'react-router-bootstrap';
 import { useSelector, useDispatch } from 'react-redux';
 import logo from '../assets/logo.png'
 import SearchBox from './SearchBox';
@@ -36,26 +35,23 @@ const Header = () => {
 return (
     <header>
         <Navbar bg='dark' variant='dark' expand='md' collapseOnSelect>
-            <Container>
-                <LinkContainer to="/">
-                    <Navbar.Brand>
+            <Container>                
+                <Navbar.Brand as={Link} to='/'>
                         <img src={logo} alt='ChinApp'/>
                     ChinMarket
-                    </Navbar.Brand>
-                </LinkContainer>               
+                </Navbar.Brand>                             
                 <Navbar.Toggle aria-controls='basic-navbar-nav'/>
                 <Navbar.Collapse id='basic-navbar-nav'>
                     <Nav className='ms-auto'>
-                        <SearchBox />
-                        <LinkContainer to='/cart'>
-                            <Nav.Link><FaShoppingCart />Carrito
-                            {cartItems.length > 0 && (
-                                <Badge pill bg='success' style={{marginLeft: '5px'}}>
-                                    { cartItems.reduce((a, c) => a + c.qty, 0) }
-                                </Badge>
-                            )}
-                            </Nav.Link>
-                        </LinkContainer>
+                        <SearchBox />                       
+                            <Nav.Link as={Link} to='/cart'>
+                                <FaShoppingCart />Carrito
+                                {cartItems.length > 0 && (
+                                    <Badge pill bg='success' style={{marginLeft: '5px'}}>
+                                        { cartItems.reduce((a, c) => a + c.qty, 0) }
+                                    </Badge>
+                                )}
+                            </Nav.Link>                        
                         { userInfo ? (
                             <NavDropdown title={userInfo.name} id='username'>
                                 <NavDropdown.Item as={Link} to='/profile'>
@@ -67,9 +63,9 @@ return (
                             </NavDropdown>
                         ) : 
                         (
-                            <LinkContainer to='/login'>
-                                <Nav.Link><FaUser/>Ingresar</Nav.Link>
-                            </LinkContainer>                       
+                            <Nav.Link as={Link} to='/login'>
+                                <FaUser/>Ingresar
+                            </Nav.Link>                                                
                         ) }
 
                         {userInfo && userInfo.isAdmin && (
