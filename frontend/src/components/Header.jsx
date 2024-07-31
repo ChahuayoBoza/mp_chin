@@ -7,6 +7,8 @@ import { logout } from '../slices/authSlice';
 import { useSelector, useDispatch } from 'react-redux';
 import logo from '../assets/logo.png'
 import SearchBox from './SearchBox';
+import { resetCart } from '../slices/cartSlice';
+
 const Header = () => {
 
     const { cartItems } = useSelector((state) => state.cart);
@@ -25,7 +27,7 @@ const Header = () => {
             dispatch(logout());
             // NOTE: here we need to reset cart state for when a user logs out so the next
             // user doesn't inherit the previous users cart and shipping
-            // dispatch(resetCart());
+            dispatch(resetCart());
             navigate('/login');
         } catch (err) {
             console.error(err);
