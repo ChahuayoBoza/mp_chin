@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 import { Form, Row, Col, Image, ListGroup, Card, Button } from 'react-bootstrap';
@@ -26,6 +26,8 @@ const ProductScreen = () => {
 
     const [comment, setComment] = useState('');
 
+    const [mainImage,setMainImage] = useState(null);
+
     const { data:product, isLoading, refetch, error  } = useGetProductDetailsQuery(productId);
 
     const [createReview, { isLoading: loadingProductReview }] = useCreateReviewMutation();
@@ -47,12 +49,22 @@ const ProductScreen = () => {
                 comment,
             }).unwrap();
             refetch();
-            toast.success('Revseña creada correctamente');
+            toast.success('Reseña creada correctamente');
             setRating(0);
             setComment('');
         } catch (err) {
             toast.error(err?.data?.message || err.error);
         }
+    };
+    
+    useEffect(() => {
+        if(product) {
+            setMainImage(product.images ? product.images[0] : null)
+        }        
+    }, [product]);
+    
+    const handleThumnailImageClick = (image) => {
+        setMainImage((image));
     };
     
     return (
@@ -70,7 +82,20 @@ const ProductScreen = () => {
                 <Meta title={product.name} />
                 <Row>
                     <Col md={5}>
-                        <Image src={product.image} alt={product.name} fluid/>
+                        <Image className="main-product-image" src={mainImage} alt={product.name} fluid/>
+                        <div className="mt-3 thumbnail-container">
+                        { product.images.map((image, index) => (
+                            <Image
+                                key={index}
+                                src={image}
+                                alt={`Image ${index + 1}`}
+                                thumbnail
+                                className={`thumbnail ${mainImage === image ? 'thumbnail-active' : ''}`}
+                                onClick={() => handleThumnailImageClick(image)}
+                                style={{ cursor: 'pointer' }}
+                            />    
+                        )) }
+                    </div>
                     </Col>
                     <Col md={4}>
                         <ListGroup variant='flush'>

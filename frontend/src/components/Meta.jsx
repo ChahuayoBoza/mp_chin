@@ -1,6 +1,11 @@
 import { Helmet } from 'react-helmet-async';
 
-const Meta = ({ title, description, keywords }) => {
+const Meta = (
+  { 
+    title = 'Bienvenido a Chin!!!',
+    description = 'Tenemos los mejores productos a bajos precios',
+    keywords = 'Electronicos, Ropas, Barato'
+  }) => {
   return (
     <Helmet>
       <title>{title}</title>
@@ -8,12 +13,6 @@ const Meta = ({ title, description, keywords }) => {
       <meta name='keyword' content={keywords} />
     </Helmet>
   );
-};
-
-Meta.defaultProps = {
-  title: 'Bienvenido a Chin!!!',
-  description: 'Tenemos los mejores productos a bajos precios ',
-  keywords: 'Electronicos, Ropas, Barato',
 };
 
 export default Meta;
