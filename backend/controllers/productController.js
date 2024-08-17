@@ -39,15 +39,15 @@ const getProductById = asyncHandler(async (req, res) => {
 // @access  Private/Admin
 const createProduct = asyncHandler(async (req, res) => {
     const product = new Product({
-        name: 'Sample name',
+        name: 'Actualice nombre',
         price: 0,
         user: req.user._id,
-        image: '/images/sample.jpg',
-        brand: 'Sample brand',
-        category: 'Sample category',
+        images: [],
+        brand: 'Actualice la marca',
+        category: 'Actualice la categoria',
         countInStock: 0,
         numReviews: 0,
-        description: 'Sample description',
+        description: 'Actualice la descripción',
     });
 
     const createdProduct = await product.save();
@@ -58,7 +58,7 @@ const createProduct = asyncHandler(async (req, res) => {
 // @route   PUT /api/products/:id
 // @access  Private/Admin
 const updateProduct = asyncHandler(async (req, res) => {
-    const { name, price, description, image, brand, category, countInStock } =
+    const { name, price, description, images, brand, category, countInStock } =
         req.body;
 
     const product = await Product.findById(req.params.id);
@@ -67,7 +67,7 @@ const updateProduct = asyncHandler(async (req, res) => {
         product.name = name;
         product.price = price;
         product.description = description;
-        product.image = image;
+        product.images = images;
         product.brand = brand;
         product.category = category;
         product.countInStock = countInStock;
@@ -88,7 +88,7 @@ const deleteProduct = asyncHandler(async (req, res) => {
 
     if (product) {
         await Product.deleteOne({ _id: product._id });
-        res.json({ message: 'Produco eliminado' });
+        res.json({ message: 'Producto eliminado' });
     } else {
         res.status(404);
         throw new Error('Producto no encontrado');

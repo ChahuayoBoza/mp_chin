@@ -17,15 +17,14 @@ const ProductEditScreen = () => {
 
     const [name, setName] = useState('');
     const [price, setPrice] = useState(0);
-    const [image, setImage] = useState('');
+    const [images, setImages] = useState([]);
     const [brand, setBrand] = useState('');
     const [category, setCategory] = useState('');
     const [countInStock, setCountInStock] = useState(0);
     const [description, setDescription] = useState('');
+    const [loadingImage, setLoadingImage] = useState(true);
 
     const { data: product, isLoading, refetch, error } = useGetProductDetailsQuery(productId);
-
-    console.log("PRODUCT", product);
 
     const [updateProduct, { isLoading: loadingUpdate }] = useUpdateProductMutation();
 
@@ -40,12 +39,12 @@ const ProductEditScreen = () => {
             productId,
             name,
             price,
-            image,
+            images,
             brand,
             category,
             description,
             countInStock,
-        }).unwrap(); // NOTE: here we need to unwrap the Promise to catch any rejection in our catch block
+        }).unwrap(); 
         toast.success('Producto actualizado');
         refetch();
         navigate('/admin/productlist');
@@ -58,7 +57,7 @@ const ProductEditScreen = () => {
         if (product) {
         setName(product.name);
         setPrice(product.price);
-        setImage(product.image);
+        setImages(product.images || []);
         setBrand(product.brand);
         setCategory(product.category);
         setCountInStock(product.countInStock);
@@ -67,15 +66,30 @@ const ProductEditScreen = () => {
     }, [product]);
 
     const uploadFileHandler = async (e) => {
+        const files = e.target.files;
         const formData = new FormData();
-        formData.append('image', e.target.files[0]);
+
+        for (let i = 0; i < files.length; i++) {
+            formData.append('image', files[i]);
+        }
+
         try {
+            setLoadingImage(true);
             const res = await uploadProductImage(formData).unwrap();
             toast.success(res.message);
-            setImage(res.image);
+            setImages((prevImages) => {
+                const newImages = res.images.filter(newImg => !prevImages.includes(newImg));
+                return [...prevImages, ...newImages];
+            });
         } catch (err) {
             toast.error(err?.data?.message || err.error);
+        } finally {
+            setLoadingImage(false);  
         }
+    };
+
+    const removeImageHandler = (image) => {
+        setImages((prevImages) => prevImages.filter(img => img !== image));
     };
 
     return (
@@ -113,19 +127,50 @@ const ProductEditScreen = () => {
                 </Form.Group>
 
                 <Form.Group controlId='image'>
-                    <Form.Label>Imagen</Form.Label>
+                    <Form.Label>Imágenes</Form.Label>
                     <Form.Control
-                        type='text'
-                        placeholder='Ingresa la url de la imagen'
-                        value={image}
-                        onChange={(e) => setImage(e.target.value)}
-                    ></Form.Control>
-                    <Form.Control
-                        label='Seleccionar imagen'
-                        onChange={uploadFileHandler}
                         type='file'
+                        multiple 
+                        onChange={uploadFileHandler}
                     ></Form.Control>
                     {loadingUpload && <Loader />}
+                    {images.length > 0 && (
+                        <div className='mt-3' style={{ display: 'flex', flexWrap: 'wrap', gap: '10px' }}>
+                            {images.length > 0 && images.map((img, index) => (
+                                <div key={index} style={{ position: 'relative'}}>
+                                    <img 
+                                        src={img} 
+                                        alt={`Product ${index}`} 
+                                        style={{ width: '100px', height: '100px' }}
+                                    />
+                                    <Button 
+                                        variant='danger' 
+                                        size='sm' 
+                                        style={{ 
+                                            position: 'absolute', 
+                                            top: '5px', 
+                                            right: '5px', 
+                                            backgroundColor: 'transparent', 
+                                            borderRadius: '50%', 
+                                            padding: '0.2rem', 
+                                            lineHeight: '1',
+                                            border: '2px solid red',
+                                            color: 'red',
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            justifyContent: 'center',
+                                            width: '20px',
+                                            height: '20px',
+                                            cursor: 'pointer'
+                                        }} 
+                                        onClick={() => removeImageHandler(img)}
+                                    >
+                                    &times;
+                                    </Button>
+                                </div>
+                            ))}
+                        </div> 
+                    )}               
                 </Form.Group>
 
                 <Form.Group controlId='brand'>

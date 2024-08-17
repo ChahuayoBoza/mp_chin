@@ -1,18 +1,22 @@
 import path from 'path';
 import express from 'express';
 import multer from 'multer';
+import cloudinary from 'cloudinary';
+import { CloudinaryStorage } from 'multer-storage-cloudinary';
 
 const router = express.Router();
 
-const storage = multer.diskStorage({
-    destination(req, file, cb) {
-        cb(null, 'uploads/');
-    },
-    filename(req, file, cb) {
-        cb(
-        null,
-        `${file.fieldname}-${Date.now()}${path.extname(file.originalname)}`
-        );
+cloudinary.v2.config({
+    cloudinary_url: process.env.CLOUDINARY_URL
+});
+
+const storage = new CloudinaryStorage({
+    cloudinary: cloudinary.v2,
+    params: {
+        folder: 'products', 
+        format: async (req, file) => 'jpg', 
+        public_id: (req, file) => `${file.fieldname}-${Date.now()}`, 
+        transformation: [{ quality: "auto:good" }],
     },
 });
 
@@ -31,17 +35,23 @@ function fileFilter(req, file, cb) {
 }
 
 const upload = multer({ storage, fileFilter });
+
+const uploadMultipleImages = upload.array('image', 5); 
+
 const uploadSingleImage = upload.single('image');
 
 router.post('/', (req, res) => {
-    uploadSingleImage(req, res, function (err) {
+    uploadMultipleImages(req, res, function (err) {
         if (err) {
         return res.status(400).send({ message: err.message });
         }
 
+        console.log('HERE----->', req.files); // Revisa aquí lo que se recibe
+        const imagePaths = req.files.map(file => file.path);
+
         res.status(200).send({
-        message: 'Imagen subida correctamente',
-        image: `/${req.file.path}`,
+        message: 'Imagenes subidas correctamente',
+        images: imagePaths,
         });
     });
 });

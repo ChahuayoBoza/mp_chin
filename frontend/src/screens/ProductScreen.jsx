@@ -82,7 +82,7 @@ const ProductScreen = () => {
                 <Meta title={product.name} />
                 <Row>
                     <Col md={5}>
-                        <Image className="main-product-image" src={mainImage} alt={product.name} fluid/>
+                        <Image className="main-product-image" src={mainImage} alt={product.name} fluid  style={{ width: '100%', height: '500px', objectFit: 'cover' }}/>
                         <div className="mt-3 thumbnail-container">
                         { product.images.map((image, index) => (
                             <Image
@@ -92,7 +92,7 @@ const ProductScreen = () => {
                                 thumbnail
                                 className={`thumbnail ${mainImage === image ? 'thumbnail-active' : ''}`}
                                 onClick={() => handleThumnailImageClick(image)}
-                                style={{ cursor: 'pointer' }}
+                                style={{ cursor: 'pointer', width: '100px', height: '100px', objectFit: 'cover', marginRight: '5px', }}
                             />    
                         )) }
                     </div>
