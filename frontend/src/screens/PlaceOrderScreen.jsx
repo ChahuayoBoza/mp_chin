@@ -69,7 +69,7 @@ const PlaceOrderScreen = () => {
                     </ListGroup.Item>
 
                     <ListGroup.Item>
-                    <h2>Ordenes</h2>
+                    <h2>Pedido</h2>
                     {cart.cartItems.length === 0 ? (
                         <Message>Tu carrito esta vacio</Message>
                     ) : (
@@ -111,25 +111,25 @@ const PlaceOrderScreen = () => {
                     <ListGroup.Item>
                         <Row>
                         <Col>Items</Col>
-                        <Col>${cart.itemsPrice}</Col>
+                        <Col>S/. {cart.itemsPrice}</Col>
                         </Row>
                     </ListGroup.Item>
                     <ListGroup.Item>
                         <Row>
                         <Col>Delivery</Col>
-                        <Col>${cart.shippingPrice}</Col>
+                        <Col>S/. {cart.shippingPrice}</Col>
                         </Row>
                     </ListGroup.Item>
                     <ListGroup.Item>
                         <Row>
                         <Col>IGV</Col>
-                        <Col>${cart.taxPrice}</Col>
+                        <Col>S/. {cart.taxPrice}</Col>
                         </Row>
                     </ListGroup.Item>
                     <ListGroup.Item>
                         <Row>
                         <Col>Total</Col>
-                        <Col>${cart.totalPrice}</Col>
+                        <Col>S/. {cart.totalPrice}</Col>
                         </Row>
                     </ListGroup.Item>
                     <ListGroup.Item>

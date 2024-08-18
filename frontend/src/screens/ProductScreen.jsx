@@ -106,10 +106,10 @@ const ProductScreen = () => {
                             <Rating value={product.rating} text={`${product.numReviews} reviews`} />
                         </ListGroup.Item>
                         <ListGroup.Item>
-                            Precio: ${product.price}
+                            Precio: S/. {product.price}
                         </ListGroup.Item>
                         <ListGroup.Item>
-                            Descripción: ${product.description}
+                            Descripción: {product.description}
                         </ListGroup.Item>
                         </ListGroup>
                     </Col>
@@ -122,7 +122,7 @@ const ProductScreen = () => {
                                         Precio:
                                     </Col>
                                     <Col>
-                                        <strong>${product.price}</strong>
+                                        <strong>S/. {product.price}</strong>
                                     </Col>
                                 </Row>
                             </ListGroup.Item>
@@ -139,7 +139,7 @@ const ProductScreen = () => {
                             {product.countInStock > 0 && (
                             <ListGroup.Item>
                             <Row>
-                                <Col>Qty</Col>
+                                <Col>Cantidad</Col>
                                 <Col>
                                 <Form.Control
                                     as='select'
@@ -174,8 +174,9 @@ const ProductScreen = () => {
                 </Row>
                 <Row className='review'>
                     <Col md={6}>
-                    <h2>Reseñas</h2>
-                    {product.reviews.length === 0 && <Message>No Reviews</Message>}
+                    <h3>Reseñas</h3>
+                    {product.reviews.length === 0 && <Message>Sin reseñas aun.
+                        Si deseas puedes dejar una reseña y puntuacion sobre este producto.</Message>}
                     <ListGroup variant='flush'>
                         {product.reviews.map((review) => (
                         <ListGroup.Item key={review._id}>
@@ -200,7 +201,7 @@ const ProductScreen = () => {
                                 value={rating}
                                 onChange={(e) => setRating(e.target.value)}
                                 >
-                                <option value=''>Seleccione...</option>
+                                <option value=''>Click para dejar puntuación</option>
                                 <option value='1'>1 - Malo</option>
                                 <option value='2'>2 - Regular</option>
                                 <option value='3'>3 - Bueno</option>

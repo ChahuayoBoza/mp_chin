@@ -169,7 +169,7 @@ const OrderScreen = () => {
                                                 </Link>
                                                 </Col>
                                                 <Col md={4}>
-                                                {item.qty} x ${item.price} = ${item.qty * item.price}
+                                                {item.qty} x S/. {item.price} = S/. {item.qty * item.price}
                                                 </Col>
                                             </Row>
                                             </ListGroup.Item>
@@ -189,25 +189,25 @@ const OrderScreen = () => {
                                 <ListGroup.Item>
                                     <Row>
                                     <Col>Productos</Col>
-                                    <Col>${order.itemsPrice}</Col>
+                                    <Col>S/.{order.itemsPrice}</Col>
                                     </Row>
                                 </ListGroup.Item>
                                 <ListGroup.Item>
                                     <Row>
                                     <Col>Envio</Col>
-                                    <Col>${order.shippingPrice}</Col>
+                                    <Col>S/. {order.shippingPrice}</Col>
                                     </Row>
                                 </ListGroup.Item>
                                 <ListGroup.Item>
                                     <Row>
                                     <Col>IGV</Col>
-                                    <Col>${order.taxPrice}</Col>
+                                    <Col>S/.{order.taxPrice}</Col>
                                     </Row>
                                 </ListGroup.Item>
                                 <ListGroup.Item>
                                     <Row>
                                     <Col>Total</Col>
-                                    <Col>${order.totalPrice}</Col>
+                                    <Col>S/.{order.totalPrice}</Col>
                                     </Row>
                                 </ListGroup.Item>
 

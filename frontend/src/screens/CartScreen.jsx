@@ -27,40 +27,42 @@ const CartScreen = () => {
 
     return (
         <Row>
-            <Col md={8}>
-            <h1 style={{ marginBottom: '20px' }}>Shopping Cart</h1>
+            {/* <Col xs={12} md={8} >
+            <h1 style={{ marginBottom: '20px' }}>Carrito</h1>
             {cartItems.length === 0 ? (
                 <Message>
-                Your cart is empty <Link to='/'>Go Back</Link>
+                Tu carrito esta vacio <Link to='/'>Regresar</Link>
                 </Message>
             ) : (
                 <ListGroup variant='flush'>
                 {cartItems.map((item) => (
                     <ListGroup.Item key={item._id}>
-                    <Row>
-                        <Col md={2}>
-                        <Image src={item.image} alt={item.name} fluid rounded />
+                    <Row >
+                        <Col xs={2} sm={3} md={2}>
+                            <Image className="cart-image" src={item.images[0]} alt={item.name} fluid rounded />
                         </Col>
-                        <Col md={3}>
-                        <Link to={`/product/${item._id}`}>{item.name}</Link>
+                        <Col xs={2} sm={5} md={3}>
+                            <Link to={`/product/${item._id}`}>{item.name}</Link>
                         </Col>
-                        <Col md={2}>${item.price}</Col>
-                        <Col md={2}>
-                        <Form.Control
-                            as='select'
-                            value={item.qty}
-                            onChange={(e) =>
-                            addToCartHandler(item, Number(e.target.value))
-                            }
-                        >
-                            {[...Array(item.countInStock).keys()].map((x) => (
-                            <option key={x + 1} value={x + 1}>
-                                {x + 1}
-                            </option>
-                            ))}
-                        </Form.Control>
+                        <Col xs={2} sm={4} md={2}>
+                            S/. {item.price}
                         </Col>
-                        <Col md={2}>
+                        <Col xs={2} sm={4} md={2}>
+                            <Form.Control
+                                as='select'
+                                value={item.qty}
+                                onChange={(e) =>
+                                addToCartHandler(item, Number(e.target.value))
+                                }
+                            >
+                                {[...Array(item.countInStock).keys()].map((x) => (
+                                <option key={x + 1} value={x + 1}>
+                                    {x + 1}
+                                </option>
+                                ))}
+                            </Form.Control>
+                        </Col>
+                        <Col xs={1} sm={4} md={2}>
                         <Button
                             type='button'
                             variant='light'
@@ -74,16 +76,89 @@ const CartScreen = () => {
                 ))}
                 </ListGroup>
             )}
-            </Col>
-            <Col md={4}>
+            </Col> */}
+
+<Col xs={12} md={8}>
+    <h1 style={{ marginBottom: '20px' }}>Carrito</h1>
+    {cartItems.length === 0 ? (
+        <Message>
+            Tu carrito está vacío <Link to='/'>Regresar</Link>
+        </Message>
+    ) : (
+        <ListGroup variant='flush'>
+            {cartItems.map((item) => (
+                <ListGroup.Item key={item._id}>
+                    <Row>
+                        <Col xs={3} sm={3} md={2}>
+                            <Image className="cart-image" src={item.images[0]} alt={item.name} fluid rounded />
+                        </Col>
+                        <Col xs={4} sm={5} md={3}>
+                            <Link to={`/product/${item._id}`} className="text-sm" style={{ fontSize: '0.9rem' }} >{item.name} </Link>
+                        </Col>
+                        <Col xs={3} sm={4} md={2} className="text-sm" style={{ fontSize: '0.9rem' }}>
+                            S/. {item.price}
+                        </Col>
+                        <Col xs={2} sm={4} md={2}>
+                            <Form.Control
+                                as='select'
+                                size='sm'
+                                value={item.qty}
+                                onChange={(e) =>
+                                    addToCartHandler(item, Number(e.target.value))
+                                }
+                            >
+                                {[...Array(item.countInStock).keys()].map((x) => (
+                                    <option key={x + 1} value={x + 1}>
+                                        {x + 1}
+                                    </option>
+                                ))}
+                            </Form.Control>
+                        </Col>
+
+                        {/* Botón en la misma fila en dispositivos pequeños */}
+                        <Col xs={12} className="d-block d-sm-none">
+                            <Button
+                                type='button'
+                                variant='light'
+                                onClick={() => removeFromCartHandler(item._id)}
+                                className="float-end"
+                            >
+                                
+                                <FaTrash />
+                            </Button>
+                        </Col>
+                    </Row>
+
+                    {/* Botón en una nueva fila en dispositivos medianos y grandes */}
+                    <Row className="d-none d-sm-block mt-2">
+                        <Col xs={12}>
+                            <Button
+                                type='button'
+                                variant='light'
+                                onClick={() => removeFromCartHandler(item._id)}
+                                className="w-100"
+                            >
+                                <FaTrash />
+                            </Button>
+                        </Col>
+                    </Row>
+                </ListGroup.Item>
+            ))}
+        </ListGroup>
+    )}
+</Col>
+
+
+
+            <Col xs={12} md={4}>
             <Card>
                 <ListGroup variant='flush'>
                 <ListGroup.Item>
                     <h2>
                     Subtotal ({cartItems.reduce((acc, item) => acc + item.qty, 0)})
-                    items
+                    productos
                     </h2>
-                    $
+                    S/&nbsp;
                     {cartItems
                     .reduce((acc, item) => acc + item.qty * item.price, 0)
                     .toFixed(2)}
@@ -95,7 +170,7 @@ const CartScreen = () => {
                     disabled={cartItems.length === 0}
                     onClick={checkoutHandler}
                     >
-                    Proceed To Checkout
+                    Continuar con la compra
                     </Button>
                 </ListGroup.Item>
                 </ListGroup>

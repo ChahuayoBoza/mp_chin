@@ -22,7 +22,6 @@ const ProductEditScreen = () => {
     const [category, setCategory] = useState('');
     const [countInStock, setCountInStock] = useState(0);
     const [description, setDescription] = useState('');
-    const [loadingImage, setLoadingImage] = useState(true);
 
     const { data: product, isLoading, refetch, error } = useGetProductDetailsQuery(productId);
 
@@ -74,7 +73,7 @@ const ProductEditScreen = () => {
         }
 
         try {
-            setLoadingImage(true);
+            
             const res = await uploadProductImage(formData).unwrap();
             toast.success(res.message);
             setImages((prevImages) => {
@@ -83,9 +82,7 @@ const ProductEditScreen = () => {
             });
         } catch (err) {
             toast.error(err?.data?.message || err.error);
-        } finally {
-            setLoadingImage(false);  
-        }
+        } 
     };
 
     const removeImageHandler = (image) => {
