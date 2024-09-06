@@ -36,7 +36,7 @@ const PlaceOrderScreen = () => {
                 paymentMethod: cart.paymentMethod,
                 itemsPrice: cart.itemsPrice,
                 shippingPrice: cart.shippingPrice,
-                taxPrice: cart.taxPrice,
+                // taxPrice: cart.taxPrice,
                 totalPrice: cart.totalPrice,
             }).unwrap();
             dispatch(clearCartItems());
@@ -50,51 +50,66 @@ const PlaceOrderScreen = () => {
         <>
             <CheckoutSteps step1 step2 step3 step4 />
             <Row>
-                <Col md={8}>
+                <Col xs={12} md={8}>
                 <ListGroup variant='flush'>
                     <ListGroup.Item>
-                    <h2>Dirección</h2>
-                    <p>
-                        <strong>Address:</strong>
-                        {cart.shippingAddress.address}, {cart.shippingAddress.city}{' '}
-                        {cart.shippingAddress.postalCode},{' '}
-                        {cart.shippingAddress.country}
-                    </p>
+                        <Row xs={12} md={8}>
+                            <Col xs={4}>
+                                <strong>Dirección: </strong>
+                            </Col>
+                            <Col xs={8}>
+                                <p>                           
+                                    {cart.shippingAddress.address}, {cart.shippingAddress.city}{' '}
+                                    {cart.shippingAddress.postalCode},{' '}
+                                    {cart.shippingAddress.country}
+                                </p>
+                            </Col>                       
+                        </Row>                   
+                    </ListGroup.Item>
+                    <ListGroup.Item>
+                        <Row xs={12} md={8}>
+                            <Col xs={6} md={6}>
+                                <strong>Metodo de pago: </strong>
+                            </Col>
+                            <Col xs={6} md={2}>
+                                <p>
+                                    {cart.paymentMethod} 
+                                </p>
+                                
+                            </Col>
+                        </Row>   
                     </ListGroup.Item>
 
-                    <ListGroup.Item>
-                    <h2>Metodo de pago</h2>
-                    <strong>Metodo: </strong>
-                    {cart.paymentMethod}
-                    </ListGroup.Item>
-
-                    <ListGroup.Item>
-                    <h2>Pedido</h2>
+                    <ListGroup.Item className='p-0 m-0'>
                     {cart.cartItems.length === 0 ? (
                         <Message>Tu carrito esta vacio</Message>
                     ) : (
-                        <ListGroup variant='flush'>
+                        <ListGroup variant='flush' className='p-0 m-0'>
                         {cart.cartItems.map((item, index) => (
-                            <ListGroup.Item key={index}>
-                            <Row>
-                                <Col md={1}>
-                                <Image
-                                    src={item.image}
-                                    alt={item.name}
-                                    fluid
-                                    rounded
-                                />
-                                </Col>
-                                <Col>
-                                <Link to={`/product/${item.product}`}>
-                                    {item.name}
-                                </Link>
-                                </Col>
-                                <Col md={4}>
-                                {item.qty} x ${item.price} = $
-                                {(item.qty * (item.price * 100)) / 100}
-                                </Col>
-                            </Row>
+                            <ListGroup.Item key={index} className='m-0'>
+                            <div style={{ display: 'grid', gridTemplateColumns: '1fr 2fr 2fr 1fr', alignItems: 'start', gap: '10px', marginRight: '-20px', marginLeft: '-20px'  }}>
+                                <div>
+                                    <Image
+                                        src={item.images[0]}
+                                        alt={item.name}
+                                        fluid
+                                        rounded
+                                        style={{ maxHeight: '60px', maxWidth: '60px' }}
+                                    />
+                                </div>
+                                <div>
+                                    <Link to={`/product/${item.product}`} style={{textDecoration : 'none'}}>
+                                        <p>{item.name}</p>
+                                    </Link>
+                                </div>
+                                <div>
+                                    <div className="w-100" style={{ display: 'block', marginBottom: '-10px' }}>S/{item.price}</div>                                   
+                                    <div className="w-100 mt-0" style={{ display: 'block', marginTop: '0px', color: 'Highlight' }}>x <strong>{item.qty}</strong></div>
+                                </div>                                    
+                                <div>
+                                    <strong>S/{(item.qty * (item.price * 100)) / 100}</strong> 
+                                </div>
+                            </div>
                             </ListGroup.Item>
                         ))}
                         </ListGroup>
@@ -110,25 +125,26 @@ const PlaceOrderScreen = () => {
                     </ListGroup.Item>
                     <ListGroup.Item>
                         <Row>
-                        <Col>Items</Col>
-                        <Col>S/. {cart.itemsPrice}</Col>
+                        <Col>Productos&nbsp;&nbsp;</Col>
+                        <Col>S/ {cart.itemsPrice}</Col>
                         </Row>
                     </ListGroup.Item>
                     <ListGroup.Item>
                         <Row>
-                        <Col>Delivery</Col>
-                        <Col>S/. {cart.shippingPrice}</Col>
+                            <Col>Delivery&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</Col>
+                            <Col>S/ {cart.shippingPrice}</Col>
                         </Row>
                     </ListGroup.Item>
-                    <ListGroup.Item>
+                    {/* //Descomentar si se desa inlcuir IGV */}
+                    {/* <ListGroup.Item >
                         <Row>
-                        <Col>IGV</Col>
-                        <Col>S/. {cart.taxPrice}</Col>
+                            <Col >IGV&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</Col>
+                            <Col>S/ {cart.taxPrice}</Col>
                         </Row>
-                    </ListGroup.Item>
+                    </ListGroup.Item> */}
                     <ListGroup.Item>
                         <Row>
-                        <Col>Total</Col>
+                        <Col>Total&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</Col>
                         <Col>S/. {cart.totalPrice}</Col>
                         </Row>
                     </ListGroup.Item>

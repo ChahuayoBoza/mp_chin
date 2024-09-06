@@ -110,32 +110,52 @@ const OrderScreen = () => {
                         <Col md={8}>
                             <ListGroup variant='flush'>
                                 <ListGroup.Item>
-                                    <h2>Envio</h2>
-                                    <p>
-                                        <strong>Nombres: </strong> {order.user.name}
-                                    </p>
-                                    <p>
-                                        <strong>Correo: </strong>{order.user.email}
-                                        {/* <a href={`mailto:${order.user.email}`}>{order.user.email}</a> */}
-                                    </p>
-                                    <p>
-                                        <strong>Address:</strong>
-                                        {order.shippingAddress.address}, {order.shippingAddress.city}{' '}
-                                        {order.shippingAddress.postalCode},{' '}
-                                        {order.shippingAddress.country}
-                                    </p>
-                                    {order.isDelivered ? (
-                                        <Message variant='success'>
-                                        Entregado el {order.deliveredAt}
-                                        </Message>
-                                    ) : (
-                                        <Message variant='danger'>No entregado</Message>
-                                    )}
+                                    <Col>
+                                        <Row>
+                                            <h2>
+                                                <strong><u>Datos del cliente</u></strong>
+                                            </h2>
+                                        </Row>
+                                        <Row>
+                                            <p>
+                                                <strong>Nombres: </strong> {order.user.name}
+                                            </p>
+                                        </Row>
+                                        <Row>
+                                            <p>
+                                                <strong>Correo: </strong>{order.user.email}
+                                                {/* <a href={`mailto:${order.user.email}`}>{order.user.email}</a> */}
+                                            </p>
+                                        </Row>
+                                        <Row>
+                                            <p>
+                                                <strong>Dirección: </strong>
+                                                {order.shippingAddress.address}, {order.shippingAddress.city}{' '}
+                                                {order.shippingAddress.postalCode},{' '}
+                                                {order.shippingAddress.country}
+                                            </p>
+                                            {order.isDelivered ? (
+                                                <Message variant='success'>
+                                                Entregado el {order.deliveredAt}
+                                                </Message>
+                                            ) : (
+                                                <Message variant='danger'>No entregado</Message>
+                                            )}
+                                            </Row>
+                                    </Col>
                                 </ListGroup.Item>                            
 
                                 <ListGroup.Item>
-                                    <h2>Metodo de pago</h2>
-                                    <p>
+                                    <Col>
+                                            <Row>
+                                                <u>
+                                                    <strong>
+                                                        <h2>Metodo de pago</h2>
+                                                    </strong>
+                                                </u>
+                                            </Row>
+                                            <Row>
+                                            <p>
                                         <strong>Metodo: </strong>
                                         {order.paymentMethod}
                                     </p>
@@ -144,34 +164,41 @@ const OrderScreen = () => {
                                     ) : (
                                         <Message variant='danger'>Pago no realizado</Message>
                                     )}
+                                            </Row>
+                                    </Col>
+                                    
                                 </ListGroup.Item>
 
                                 <ListGroup.Item>
-                                <h2>Pedidos</h2>
                                 {order.orderItems.length === 0 ? (
                                     <Message>Sin pedidos</Message>
                                 ) : (
-                                    <ListGroup variant='flush'>
+                                    <ListGroup variant='flush' className='p-0 m-0'>
                                         {order.orderItems.map((item, index) => (
-                                            <ListGroup.Item key={index}>
-                                            <Row>
-                                                <Col md={1}>
-                                                <Image
-                                                    src={item.image}
-                                                    alt={item.name}
-                                                    fluid
-                                                    rounded
-                                                />
-                                                </Col>
-                                                <Col>
-                                                <Link to={`/product/${item.product}`}>
-                                                    {item.name}
-                                                </Link>
-                                                </Col>
-                                                <Col md={4}>
-                                                {item.qty} x S/. {item.price} = S/. {item.qty * item.price}
-                                                </Col>
-                                            </Row>
+                                            <ListGroup.Item key={index} className='m-0'>
+                                                <div style={{ display: 'grid', gridTemplateColumns: '1fr 2fr 2fr 1fr', alignItems: 'start', gap: '10px', marginRight: '-20px', marginLeft: '-20px'  }}>
+                                                    <div>
+                                                        <Image
+                                                        src={item.images[0]}
+                                                        alt={item.name}
+                                                        fluid
+                                                        rounded
+                                                        style={{ maxHeight: '60px', maxWidth: '60px' }}
+                                                        />
+                                                    </div>
+                                                    <div>
+                                                        <Link to={`/product/${item.product}`}>
+                                                            {item.name}
+                                                        </Link>
+                                                    </div> 
+                                                    <div>  
+                                                        <div className="w-100" style={{ display: 'block', marginBottom: '-10px' }}>S/. {item.price}</div>
+                                                        <div className="w-100 mt-0" style={{ display: 'block', marginTop: '0px', color: 'Highlight' }}>x {item.qty}</div> 
+                                                    </div>
+                                                    <div>
+                                                        S/. {item.qty * item.price}
+                                                    </div>
+                                                </div>
                                             </ListGroup.Item>
                                         ))}
                                     </ListGroup>
@@ -189,25 +216,25 @@ const OrderScreen = () => {
                                 <ListGroup.Item>
                                     <Row>
                                     <Col>Productos</Col>
-                                    <Col>S/.{order.itemsPrice}</Col>
+                                    <Col>S/ {order.itemsPrice}</Col>
                                     </Row>
                                 </ListGroup.Item>
                                 <ListGroup.Item>
                                     <Row>
-                                    <Col>Envio</Col>
-                                    <Col>S/. {order.shippingPrice}</Col>
+                                    <Col>Envio&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</Col>
+                                    <Col>S/ {order.shippingPrice}</Col>
                                     </Row>
                                 </ListGroup.Item>
-                                <ListGroup.Item>
+                                {/* <ListGroup.Item>
                                     <Row>
-                                    <Col>IGV</Col>
-                                    <Col>S/.{order.taxPrice}</Col>
+                                    <Col>IGV&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</Col>
+                                    <Col>S/ {order.taxPrice}</Col>
                                     </Row>
-                                </ListGroup.Item>
+                                </ListGroup.Item> */}
                                 <ListGroup.Item>
                                     <Row>
-                                    <Col>Total</Col>
-                                    <Col>S/.{order.totalPrice}</Col>
+                                    <Col>Total&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</Col>
+                                    <Col>S/ {order.totalPrice}</Col>
                                     </Row>
                                 </ListGroup.Item>
 

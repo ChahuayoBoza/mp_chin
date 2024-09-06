@@ -119,7 +119,7 @@ const ProductScreen = () => {
                             <ListGroup.Item>
                                 <Row>
                                     <Col>
-                                        Precio:
+                                        Precio: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                     </Col>
                                     <Col>
                                         <strong>S/. {product.price}</strong>
@@ -129,7 +129,7 @@ const ProductScreen = () => {
                             <ListGroup.Item>
                                 <Row>
                                     <Col>
-                                        Stock:
+                                        Stock: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                     </Col>
                                     <Col>
                                         <strong>{product.countInStock > 0 ? 'En Stock' : 'Sin Stock'}</strong>
@@ -173,10 +173,11 @@ const ProductScreen = () => {
                     </Col>
                 </Row>
                 <Row className='review'>
-                    <Col md={6}>
+                    <Col md={6} xs={12}>
                     <h3>Reseñas</h3>
-                    {product.reviews.length === 0 && <Message>Sin reseñas aun.
-                        Si deseas puedes dejar una reseña y puntuacion sobre este producto.</Message>}
+                    {product.reviews.length === 0 && <Message>Sin reseñas aún.
+                        <br />
+                        Deja tu reseña y puntuación sobre este producto.</Message>}
                     <ListGroup variant='flush'>
                         {product.reviews.map((review) => (
                         <ListGroup.Item key={review._id}>
@@ -187,51 +188,56 @@ const ProductScreen = () => {
                         </ListGroup.Item>
                         ))}
                         <ListGroup.Item>
-                        <h2>Escribe una reseña</h2>
+                            <Col>
+                                <Row>
+                                    <h2>Escribe una reseña</h2>
+                                </Row>
+                                <Row>
+                                    {loadingProductReview && <Loader />}
 
-                        {loadingProductReview && <Loader />}
-
-                        {userInfo ? (
-                            <Form onSubmit={submitHandler}>
-                            <Form.Group className='my-2' controlId='rating'>
-                                <Form.Label>Puntuación</Form.Label>
-                                <Form.Control
-                                as='select'
-                                required
-                                value={rating}
-                                onChange={(e) => setRating(e.target.value)}
-                                >
-                                <option value=''>Click para dejar puntuación</option>
-                                <option value='1'>1 - Malo</option>
-                                <option value='2'>2 - Regular</option>
-                                <option value='3'>3 - Bueno</option>
-                                <option value='4'>4 - Muy bueno</option>
-                                <option value='5'>5 - Exelente</option>
-                                </Form.Control>
-                            </Form.Group>
-                            <Form.Group className='my-2' controlId='comment'>
-                                <Form.Label>Comentario</Form.Label>
-                                <Form.Control
-                                as='textarea'
-                                row='3'
-                                required
-                                value={comment}
-                                onChange={(e) => setComment(e.target.value)}
-                                ></Form.Control>
-                            </Form.Group>
-                            <Button
-                                disabled={loadingProductReview}
-                                type='submit'
-                                variant='primary'
-                            >
-                                Enviar
-                            </Button>
-                            </Form>
-                        ) : (
-                            <Message>
-                            Por favor  <Link to='/login'>ingresa</Link> para escribir una reseña
-                            </Message>
-                        )}
+                                    {userInfo ? (
+                                        <Form onSubmit={submitHandler}>
+                                        <Form.Group className='my-2' controlId='rating'>
+                                            <Form.Label>Puntuación</Form.Label>
+                                            <Form.Control
+                                            as='select'
+                                            required
+                                            value={rating}
+                                            onChange={(e) => setRating(e.target.value)}
+                                            >
+                                            <option value=''>Click para dejar puntuación</option>
+                                            <option value='1'>1 - Malo</option>
+                                            <option value='2'>2 - Regular</option>
+                                            <option value='3'>3 - Bueno</option>
+                                            <option value='4'>4 - Muy bueno</option>
+                                            <option value='5'>5 - Exelente</option>
+                                            </Form.Control>
+                                        </Form.Group>
+                                        <Form.Group className='my-2' controlId='comment'>
+                                            <Form.Label>Comentario</Form.Label>
+                                            <Form.Control
+                                            as='textarea'
+                                            row='3'
+                                            required
+                                            value={comment}
+                                            onChange={(e) => setComment(e.target.value)}
+                                            ></Form.Control>
+                                        </Form.Group>
+                                        <Button
+                                            disabled={loadingProductReview}
+                                            type='submit'
+                                            variant='primary'
+                                        >
+                                            Enviar
+                                        </Button>
+                                        </Form>
+                                    ) : (
+                                        <Message>
+                                        Por favor  <Link to='/login'>ingresa</Link> para escribir una reseña
+                                        </Message>
+                                    )}
+                                </Row>
+                            </Col>
                         </ListGroup.Item>
                     </ListGroup>
                     </Col>

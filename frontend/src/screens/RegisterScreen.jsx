@@ -50,23 +50,23 @@ const RegisterScreen = () => {
 
   return (
     <FormContainer>
-      <h1>Register</h1>
+      <h1>Registro</h1>
       <Form onSubmit={submitHandler}>
         <Form.Group className='my-2' controlId='name'>
-          <Form.Label>Name</Form.Label>
+          <Form.Label>Nombres y Apellidos</Form.Label>
           <Form.Control
             type='name'
-            placeholder='Enter name'
+            placeholder='Ingrese sus nombres y apellidos'
             value={name}
             onChange={(e) => setName(e.target.value)}
           ></Form.Control>
         </Form.Group>
 
         <Form.Group className='my-2' controlId='email'>
-          <Form.Label>Email Address</Form.Label>
+          <Form.Label>Correo electrónico</Form.Label>
           <Form.Control
             type='email'
-            placeholder='Enter email'
+            placeholder='Ingrese un correo electronico valido'
             value={email}
             onChange={(e) => setEmail(e.target.value)}
           ></Form.Control>
@@ -76,7 +76,7 @@ const RegisterScreen = () => {
           <Form.Label>Contraseña</Form.Label>
           <Form.Control
             type='password'
-            placeholder='Enter password'
+            placeholder='Ingrese una contraseña'
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           ></Form.Control>
@@ -85,7 +85,7 @@ const RegisterScreen = () => {
           <Form.Label>Confirmar contraseña</Form.Label>
           <Form.Control
             type='password'
-            placeholder='Confirm password'
+            placeholder='Confirme la contraseña'
             value={confirmPassword}
             onChange={(e) => setConfirmPassword(e.target.value)}
           ></Form.Control>

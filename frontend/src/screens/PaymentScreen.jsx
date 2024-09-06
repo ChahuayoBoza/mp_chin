@@ -25,37 +25,54 @@ const PaymentScreen = () => {
     const dispatch = useDispatch();
 
     const submitHandler = (e) => {
+        console.log("HERE")
         e.preventDefault();
         dispatch(savePaymentMethod(paymentMethod));
         navigate('/placeorder');
     };
 
     return (
-        <FormContainer>
-            <CheckoutSteps step1 step2 step3 />
-            <h1>Payment Method</h1>
-            <Form onSubmit={submitHandler}>
-                <Form.Group>
-                    <Form.Label as='legend'>Select Method</Form.Label>
-                    <Col>
-                    <Form.Check
-                        className='my-2'
-                        type='radio'
-                        label='PayPal or Credit Card'
-                        id='PayPal'
-                        name='paymentMethod'
-                        value='PayPal'
-                        checked
-                        onChange={(e) => setPaymentMethod(e.target.value)}
-                    ></Form.Check>
-                    </Col>
-                </Form.Group>
-        
-                <Button type='submit' variant='primary'>
-                    Continuar
-                </Button>
-            </Form>
-        </FormContainer>
+        <div>
+            <FormContainer>
+                <CheckoutSteps step1 step2 step3 />
+                <h1>Metodo de pago</h1>
+                <Form onSubmit={submitHandler}>
+                    <Form.Group>
+                        <Form.Label as='legend'>Seleccione el metodo de pago</Form.Label>
+                        <Col>
+                        <Form.Check
+                            className='my-2'
+                            type='radio'
+                            label='PayPal ó Tarjeta de credito/debito'
+                            id='PayPal'
+                            name='paymentMethod'
+                            value='PayPal'
+                            checked
+                            onChange={(e) => setPaymentMethod(e.target.value)}
+                        ></Form.Check>
+                        {/* <Form.Check
+                            className='my-2'
+                            type='radio'
+                            label='Yape'
+                            id='Yape'
+                            name='paymentMethod'
+                            value='Yape'
+                            checked
+                            onChange={(e) => setPaymentMethod(e.target.value)}
+                        ></Form.Check> */}
+                        </Col>
+                        <div style={{textAlign: 'center'}}>
+                            <Button type='submit' variant='primary' style={{marginTop: '100px', width: '50%'}}>
+                                Continuar
+                            </Button>
+                        </div > 
+                    </Form.Group>                
+                </Form>
+            </FormContainer>
+                      
+        </div>
+
+
     )
 }
 

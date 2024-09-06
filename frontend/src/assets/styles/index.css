@@ -104,6 +104,15 @@ table th {
     min-width: 0; /* Previene que los elementos se desborden */
   }
 
+  @media (max-width: 768px) {
+    h2 {
+        font-size: 0.9rem;
+    }
+    p, strong {
+        font-size: 0.9rem;
+    }
+}
+
   /* .cart-image {
       width: 100px; 
       height: 100px;
