@@ -1,5 +1,5 @@
 import { apiSlice } from './apiSlice';
-import { ORDERS_URL, PAYPAL_URL } from '../constants';
+import { ORDERS_URL, PAYPAL_URL,  IZIPAY_URL } from '../constants';
 
 export const orderApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
@@ -29,6 +29,14 @@ export const orderApiSlice = apiSlice.injectEndpoints({
       }),
       keepUnusedDataFor: 5,
     }),
+    getIzipayToken: builder.mutation({
+      query: (paymentDetails) => ({
+        url: IZIPAY_URL,
+        method: 'POST',
+        body: { ...paymentDetails },
+      }),
+      transformResponse: response => response, 
+    }),
     getMyOrders: builder.query({
       query: () => ({
         url: `${ORDERS_URL}/mine`,
@@ -55,6 +63,7 @@ export const {
   useGetOrderDetailsQuery,
   usePayOrderMutation,
   useGetPaypalClientIdQuery,
+  useGetIzipayTokenMutation,
   useGetMyOrdersQuery,
   useGetOrdersQuery,
   useDeliverOrderMutation,

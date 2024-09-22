@@ -8,17 +8,23 @@ import { toast } from 'react-toastify';
 import Message from '../components/Message';
 import Loader from '../components/Loader';
 import {
-  useDeliverOrderMutation,
-  useGetOrderDetailsQuery,
-  useGetPaypalClientIdQuery,
-  usePayOrderMutation,
+    useDeliverOrderMutation,
+    useGetOrderDetailsQuery,
+    useGetPaypalClientIdQuery,
+    usePayOrderMutation,
+    useGetIzipayTokenMutation
 } from '../slices/ordersApiSlice';
+
+import KRGlue from '@lyracom/embedded-form-glue';
+import axios from 'axios';
 
 const OrderScreen = () => {
 
     const { id: orderId } = useParams();
 
     const { data: order, refetch, isLoading, error } = useGetOrderDetailsQuery(orderId);
+
+    const [getIzipayToken, { data: izipayTokenData, isLoading: izipayTokenLoading, error: izipayTokenError }] = useGetIzipayTokenMutation();
 
     const [payOrder, { isLoading: loadingPay }] = usePayOrderMutation();
 
@@ -29,6 +35,81 @@ const OrderScreen = () => {
     const { data: paypal, isLoading: loadingPayPal, error: errorPayPal } = useGetPaypalClientIdQuery();
 
     const { userInfo } = useSelector((state) => state.auth);
+
+    // useEffect(() => {
+    //     // Este efecto solo carga el formulario de Lyracom cuando el componente se monta
+    //     const loadLyracomForm = async () => {
+    //       try {
+    //         // Generamos el token del formulario (puedes adaptar esta URL según tu backend)
+    //         const { data } = await axios.post('http://localhost:5000/api/izipay/checkout', {
+    //           paymentConf: { amount: 40000, currency: 'PEN' }, // Cantidad en centavos
+    //         });
+            
+    //         const formToken = data.formtoken;
+    //         const endpoint = data.endpoint;
+    //         const publicKey = data.publickey;
+    
+    //         // Cargamos la biblioteca remota de Lyracom y mostramos el formulario
+    //         await KRGlue.loadLibrary(endpoint, publicKey);
+    //         await KRGlue.setFormConfig({
+    //           formToken: formToken,
+    //           'kr-language': 'es-ES',
+    //         });
+    //         await KRGlue.addForm('#lyraPaymentForm'); // Añadir el formulario de pago
+    //         await KRGlue.showForm(); // Mostrar el formulario
+    //       } catch (error) {
+    //         console.error('Error al cargar el formulario de Lyracom:', error);
+    //       }
+    //     };
+    
+    //     loadLyracomForm();
+    // }, []);
+   
+    useEffect(() => {
+        const loadPaymentForm = async () => {
+          try {
+            // Generar el formToken utilizando la mutación de Redux Toolkit
+            const paymentDetails = {
+              paymentConf: { 
+                amount: 40000, 
+                currency: 'PEN'
+              }
+            };
+            const response = await getIzipayToken(paymentDetails).unwrap();
+            const { formtoken, endpoint, publickey } = response;
+    
+            // Cargar la librería de Lyracom y configurar el formulario
+            await KRGlue.loadLibrary(endpoint, publickey)
+                .then(({KR}) => KR.setFormConfig({
+                formToken: formtoken
+                }))
+                .then(({ KR }) => KR.onSubmit(validatePayment) )
+                .then(({ KR }) => KR.addForm('#myPaymentForm') )
+                .then(({ KR, result }) => KR.showForm(result.formId))
+                .catch(err=>console.log(err))
+            // await KRGlue.setFormConfig({
+            //   formToken: formtoken,
+            //   'kr-language': 'es-ES'
+            // });
+    
+            // // Agregar el formulario al DOM y mostrarlo
+            // await KRGlue.addForm('#myPaymentForm');
+            // await KRGlue.showForm();
+    
+          } catch (error) {
+            toast.error('Error processing payment: ' + error.message);
+            console.error('Payment processing error:', error);
+          }
+        };
+    
+        loadPaymentForm();
+      }, [getIzipayToken]);
+    
+    
+    
+
+
+    
 
     useEffect(() => {
         if (!errorPayPal && !loadingPayPal && paypal.clientId) {
@@ -237,6 +318,14 @@ const OrderScreen = () => {
                                     <Col>S/ {order.totalPrice}</Col>
                                     </Row>
                                 </ListGroup.Item>
+
+                                {/* IZIPAY START */}
+                                <ListGroup variant="flush">
+                                    <ListGroup.Item>
+                                        <div id="myPaymentForm"></div> {/* Aquí se mostrará el formulario de pago */}
+                                    </ListGroup.Item>
+                                    </ListGroup>
+                                {/* IZIPAY END */}
 
                                 {!order.isPaid && (
                                     <ListGroup.Item>
