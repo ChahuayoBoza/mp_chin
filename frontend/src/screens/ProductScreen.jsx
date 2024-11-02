@@ -106,7 +106,7 @@ const ProductScreen = () => {
                             <Rating value={product.rating} text={`${product.numReviews} reviews`} />
                         </ListGroup.Item>
                         <ListGroup.Item>
-                            Precio: S/. {product.price}
+                            Preciosos: S/. {product.price}
                         </ListGroup.Item>
                         <ListGroup.Item>
                             Descripción: {product.description}

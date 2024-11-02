@@ -12,12 +12,16 @@ cloudinary.v2.config({
 
 const storage = new CloudinaryStorage({
     cloudinary: cloudinary.v2,
-    params: {
-        folder: 'products', 
-        format: async (req, file) => 'jpg', 
-        public_id: (req, file) => `${file.fieldname}-${Date.now()}`, 
+    params: async (req, file) => {
+        const folder = req.body.folder || 'products';
+        console.log('Folder:', folder); 
+        return {
+        folder: folder, 
+        format: 'jpg', 
+        public_id: `${file.fieldname}-${Date.now()}`, 
         transformation: [{ quality: "auto:good" }],
-    },
+        }
+    ;},
 });
 
 function fileFilter(req, file, cb) {
@@ -41,12 +45,12 @@ const uploadMultipleImages = upload.array('image', 5);
 const uploadSingleImage = upload.single('image');
 
 router.post('/', (req, res) => {
-    uploadMultipleImages(req, res, function (err) {
+    console.log('REQ.FILES:', req);
+    uploadMultipleImages(req, res, function (err) {        
         if (err) {
         return res.status(400).send({ message: err.message });
         }
-
-        console.log('HERE----->', req.files); // Revisa aquí lo que se recibe
+        
         const imagePaths = req.files.map(file => file.path);
 
         res.status(200).send({

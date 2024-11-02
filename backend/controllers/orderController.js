@@ -152,6 +152,46 @@ const getOrders = asyncHandler(async (req, res) => {
   res.status(200).json(orders);
 });
 
+// @desc    Send alert with screenshot URL
+// @route   POST /api/orders/:id/alert
+// @access  Private
+const sendAlertWithScreenshot = asyncHandler(async (req, res) => {
+  const screenshotPath = req.file.path;
+
+  console.log('Iniciando proceso de subida de imagen a Cloudinary');
+  try {
+    // Subir la imagen a un servidor accesible públicamente
+    const formData = new FormData();
+    formData.append('file', fs.createReadStream(screenshotPath));
+    formData.append('upload_preset', 'evidencias');
+    formData.append('folder', 'evidences'); 
+    console.log('Enviando solicitud a Cloudinary');
+
+    const uploadResponse = await axios.post('https://api.cloudinary.com/v1_1/dn8cvxj4f/image/upload', formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+
+    console.log('Respuesta de Cloudinary recibida:', uploadResponse.data);
+    const imageUrl = uploadResponse.data.secure_url;
+
+    // Log de la URL que se enviará en la alerta
+    console.log('Enviando la siguiente URL en la alerta:', imageUrl);
+
+    // Enviar la URL de la imagen al frontend
+    res.json({ message: 'Imagen subida con éxito', imageUrl });
+  } catch (error) {
+    console.error('Error al subir la imagen a Cloudinary:', error.response ? error.response.data : error.message);
+    res.status(500).json({ error: 'Error al subir la imagen a Cloudinary' });
+  } finally {
+    // Eliminar el archivo temporal después de enviarlo
+    fs.unlinkSync(screenshotPath);
+  }
+});
+
+
+
 export {
   addOrderItems,
   getMyOrders,
@@ -159,4 +199,5 @@ export {
   updateOrderToPaid,
   updateOrderToDelivered,
   getOrders,
+  sendAlertWithScreenshot
 };

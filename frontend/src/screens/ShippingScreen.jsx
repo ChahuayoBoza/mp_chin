@@ -25,7 +25,6 @@ const ShippingScreen = () => {
 
     const submitHandler = (e) => {
         e.preventDefault();
-        console.log("Submit")
         dispatch(saveShippingAddress({ address, city, district, postalCode, country }));
         navigate('/payment');
     };

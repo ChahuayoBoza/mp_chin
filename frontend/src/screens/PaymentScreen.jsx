@@ -20,12 +20,11 @@ const PaymentScreen = () => {
         }
     }, [navigate, shippingAddress]);
 
-    const [paymentMethod, setPaymentMethod] = useState('PayPal');
+    const [paymentMethod, setPaymentMethod] = useState('Yape');
 
     const dispatch = useDispatch();
 
     const submitHandler = (e) => {
-        console.log("HERE")
         e.preventDefault();
         dispatch(savePaymentMethod(paymentMethod));
         navigate('/placeorder');
@@ -40,26 +39,36 @@ const PaymentScreen = () => {
                     <Form.Group>
                         <Form.Label as='legend'>Seleccione el metodo de pago</Form.Label>
                         <Col>
-                        <Form.Check
+                        {/* <Form.Check
                             className='my-2'
                             type='radio'
                             label='PayPal ó Tarjeta de credito/debito'
                             id='PayPal'
                             name='paymentMethod'
                             value='PayPal'
-                            checked
+                            checked={paymentMethod === 'PayPal'}
                             onChange={(e) => setPaymentMethod(e.target.value)}
-                        ></Form.Check>
-                        {/* <Form.Check
+                        ></Form.Check> */}
+                        <Form.Check
                             className='my-2'
                             type='radio'
                             label='Yape'
                             id='Yape'
                             name='paymentMethod'
                             value='Yape'
-                            checked
+                            checked={paymentMethod === 'Yape'}
                             onChange={(e) => setPaymentMethod(e.target.value)}
-                        ></Form.Check> */}
+                        ></Form.Check>
+                        <Form.Check
+                            className='my-2'
+                            type='radio'
+                            label='Tarjeta de credito/debito'
+                            id='Tarjeta de credito/debito'
+                            name='paymentMethod'
+                            value='Tarjeta de credito/debito'
+                            checked={paymentMethod === 'Tarjeta de credito/debito'}
+                            onChange={(e) => setPaymentMethod(e.target.value)}
+                        ></Form.Check>
                         </Col>
                         <div style={{textAlign: 'center'}}>
                             <Button type='submit' variant='primary' style={{marginTop: '100px', width: '50%'}}>

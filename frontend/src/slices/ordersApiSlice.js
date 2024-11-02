@@ -1,7 +1,10 @@
 import { apiSlice } from './apiSlice';
-import { ORDERS_URL, PAYPAL_URL,  IZIPAY_URL } from '../constants';
+import { ORDERS_URL, PAYPAL_URL,  IZIPAY_URL, IZIPAY_VALIDATE_URL, ALERT_URL, UPLOAD_URL } from '../constants';
 
+
+const server = "https://mp-chin.onrender.com";
 export const orderApiSlice = apiSlice.injectEndpoints({
+  
   endpoints: (builder) => ({
     createOrder: builder.mutation({
       query: (order) => ({
@@ -37,6 +40,16 @@ export const orderApiSlice = apiSlice.injectEndpoints({
       }),
       transformResponse: response => response, 
     }),
+    validateOrder: builder.mutation({
+      query: (data) => ({
+        url: IZIPAY_VALIDATE_URL,
+        method: 'POST',
+        body: {
+          ...data
+        },
+      }),
+      transformResponse: response => response, 
+    }),
     getMyOrders: builder.query({
       query: () => ({
         url: `${ORDERS_URL}/mine`,
@@ -55,6 +68,14 @@ export const orderApiSlice = apiSlice.injectEndpoints({
         method: 'PUT',
       }),
     }),
+    uploadEvidenceImage: builder.mutation({
+      query: (data) => ({
+          url: `${UPLOAD_URL}`,
+          method: 'POST',
+          body: data,
+      }),
+    }),
+
   }),
 });
 
@@ -64,7 +85,9 @@ export const {
   usePayOrderMutation,
   useGetPaypalClientIdQuery,
   useGetIzipayTokenMutation,
+  useValidateOrderMutation,
   useGetMyOrdersQuery,
   useGetOrdersQuery,
   useDeliverOrderMutation,
+  useUploadEvidenceImageMutation,
 } = orderApiSlice;

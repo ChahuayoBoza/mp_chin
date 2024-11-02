@@ -160,7 +160,7 @@ const PlaceOrderScreen = () => {
                         disabled={cart.cartItems === 0}
                         onClick={placeOrderHandler}
                         >
-                        Realizar pedido
+                        Continuar
                         </Button>
                         {isLoading && <Loader />}
                     </ListGroup.Item>
