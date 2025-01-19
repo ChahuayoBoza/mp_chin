@@ -6,7 +6,7 @@ const SuccessModal = ({ show, handleClose, orderId }) => {
   const navigate = useNavigate();
 
   return (
-    <Modal show={show} onHide={handleClose} centered size='sm' style={{ marginRight: '10%' }}>
+    <Modal show={show} onHide={handleClose} centered size='sm' style={{ marginRight: '15%' }}>
       <Modal.Header closeButton>
         <Modal.Title>Compra realizada con éxito</Modal.Title>
       </Modal.Header>
@@ -18,7 +18,7 @@ const SuccessModal = ({ show, handleClose, orderId }) => {
         <Button variant="secondary" onClick={() => navigate('/')}>
           Volver al inicio
         </Button>
-        <Button variant="primary" onClick={() => navigate(`/order/${orderId}`)}>
+        <Button variant="primary" onClick={handleClose}>
           Ver la orden
         </Button>
       </Modal.Footer>

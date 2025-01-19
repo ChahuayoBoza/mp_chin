@@ -24,6 +24,7 @@
   },
   "homepage": "https://github.com/ChahuayoBoza/mp_chin#readme",
   "dependencies": {
+    "axios": "^1.7.9",
     "bcryptjs": "^2.4.3",
     "cloudinary": "^1.41.3",
     "colors": "^1.4.0",
@@ -34,10 +35,10 @@
     "mongodb": "^6.7.0",
     "mongoose": "^8.4.4",
     "multer": "^1.4.5-lts.1",
-    "multer-storage-cloudinary": "^4.0.0",
-    "request": "^2.88.2"
+    "multer-storage-cloudinary": "^4.0.0"
   },
   "devDependencies": {
+    "@babel/plugin-proposal-private-property-in-object": "^7.14.5",
     "concurrently": "^8.2.2",
     "dotenv": "^16.4.5",
     "nodemon": "^3.1.4"
