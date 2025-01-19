@@ -17,6 +17,8 @@ import {
 
 import KRGlue from '@lyracom/embedded-form-glue';
 import YapeQRCode from '../components/YapeQRCode';
+import SuccessModal from '../components/SuccesModal';
+import { set } from 'mongoose';
 
 const OrderScreen = () => {
 
@@ -43,6 +45,10 @@ const OrderScreen = () => {
     const navigate = useNavigate();
 
     const [showPaymentButton, setShowPaymentButton] = useState(true);
+
+    const [showOrderSummary, setShowOrderSummary] = useState(true);
+
+    const [showModal, setShowModal] = useState(false);
 
     useEffect(() => {
         if (!paymentMethod) {
@@ -86,19 +92,22 @@ const OrderScreen = () => {
         const response = await validateOrder(resp);
         console.log("RESP", response);
           if (response.data.response === 'PAID'){
-            toast.success('Pago realizado con éxito');     
+            setShowModal(true);   
+            setShowOrderSummary(false);
           }else{
             toast.error('Error en el pago');
           }
         return false;
       }
 
+    const handleCloseModal = () => setShowModal(false); 
+
     function onApprove(data, actions) {
         return actions.order.capture().then(async function (details) {
             try {
                 await payOrder({ orderId, details }).unwrap();;
                 refetch();
-                toast.success('Pago realizado con exito');
+                toast.success('Pago realizado con exito');                
             } catch (err) {
                 toast.error(err?.data?.message || err.error);
             }
@@ -169,13 +178,13 @@ const OrderScreen = () => {
                                                 {order.shippingAddress.postalCode},{' '}
                                                 {order.shippingAddress.country}
                                             </p>
-                                            {order.isDelivered ? (
+                                            {/* {order.isDelivered ? (
                                                 <Message variant='success'>
                                                 Entregado el {order.deliveredAt}
                                                 </Message>
                                             ) : (
                                                 <Message variant='danger'>No entregado</Message>
-                                            )}
+                                            )} */}
                                             </Row>
                                     </Col>
                                 </ListGroup.Item>                            
@@ -194,11 +203,11 @@ const OrderScreen = () => {
                                         <strong>Metodo: </strong>
                                         {order.paymentMethod}
                                     </p>
-                                    {order.isPaid ? (
+                                    {/* {order.isPaid ? (
                                         <Message variant='success'>Pago realizado el {order.paidAt}</Message>
                                     ) : (
                                         <Message variant='danger'>Pago no realizado</Message>
-                                    )}
+                                    )} */}
                                             </Row>
                                     </Col>
                                     
@@ -242,7 +251,8 @@ const OrderScreen = () => {
                             </ListGroup>
                         </Col>
 
-                        <Col md={4}>
+                        <Col md={4} >
+                        {showOrderSummary ? (
                             <Card>
                                 <ListGroup variant='flush'>
                                 <ListGroup.Item>
@@ -260,12 +270,6 @@ const OrderScreen = () => {
                                     <Col>S/ {order.shippingPrice}</Col>
                                     </Row>
                                 </ListGroup.Item>
-                                {/* <ListGroup.Item>
-                                    <Row>
-                                    <Col>IGV&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</Col>
-                                    <Col>S/ {order.taxPrice}</Col>
-                                    </Row>
-                                </ListGroup.Item> */}
                                 <ListGroup.Item>
                                     <Row>
                                     <Col>Total&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</Col>
@@ -294,28 +298,7 @@ const OrderScreen = () => {
                                         <div id="izipayForm"></div> 
                                     </ListGroup.Item>
                                 </ListGroup>
-
-                                {/* {!order.isPaid && (
-                                    <ListGroup.Item>
-                                    {loadingPay && <Loader />}
-
-                                    {isPending ? (
-                                        <Loader />
-                                    ) : (
-                                        <div>
-                                            <div>
-                                                <PayPalButtons
-                                                createOrder={createOrder}
-                                                onApprove={onApprove}
-                                                onError={onError}
-                                                ></PayPalButtons>
-                                            </div>
-                                        </div>
-                                    )}
-                                    </ListGroup.Item>
-                                )} */}
                                 {loadingDeliver && <Loader />}
-
                                 {userInfo &&
                                 userInfo.isAdmin &&
                                 order.isPaid &&
@@ -332,9 +315,20 @@ const OrderScreen = () => {
                                 )}
                                 </ListGroup>
                             </Card>
+                        ) : (
+                            <div className="d-flex justify-content-center">
+                                 <Button onClick={() => navigate('/')} variant="primary">
+                                    Ver más productos
+                                </Button>
+                            </div>
+                           
+                        )}
                         </Col>
                     </Row>
-                </>
+
+                    <SuccessModal show={showModal} handleClose={handleCloseModal} orderId={order._id} />
+                                   
+                 </>
             );
 };
 
